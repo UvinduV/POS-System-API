@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.dto.ItemDTO;
+import lk.ijse.possystemapi.utill.UtillProcess;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -44,10 +45,10 @@ public class CustomersController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
 
-        String id = UUID.randomUUID().toString();
+        /*String id = UUID.randomUUID().toString();*/
         Jsonb jsonb= JsonbBuilder.create();
         CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
-        customerDTO.setId(id);
+        customerDTO.setId(UtillProcess.generateCustomerId());
         System.out.println(customerDTO);
 
         try {
@@ -124,5 +125,10 @@ public class CustomersController extends HttpServlet {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Delete Customer
     }
 }
