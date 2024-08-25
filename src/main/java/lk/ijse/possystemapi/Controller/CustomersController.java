@@ -20,6 +20,7 @@ import java.util.UUID;
 public class CustomersController extends HttpServlet {
     private Connection connection;
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
+    static String GET_CUSTOMER="Select * from customer where CustId= ?";
 
     @Override
     public void init() throws ServletException {
@@ -36,13 +37,10 @@ public class CustomersController extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        //save customer
         if (!req.getContentType().toLowerCase().startsWith("application/json") || req.getContentType() == null) {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
-        /*JsonReader reader1= Json.createReader(req.getReader());
-        JsonObject jsonObject= reader1.readObject();
-        System.out.println(jsonObject.getString("email"));*/
 
         String id = UUID.randomUUID().toString();
         Jsonb jsonb= JsonbBuilder.create();
@@ -69,5 +67,30 @@ public class CustomersController extends HttpServlet {
 
     }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        var customerDTO=new CustomerDTO();
+        var custId = req.getParameter("id");
+
+        try (var writer = resp.getWriter()){
+            var ps = connection.prepareStatement(GET_CUSTOMER);
+            ps.setString(1, custId);
+            var resultSet = ps.executeQuery();
+            while (resultSet.next()){
+                customerDTO.setId(resultSet.getString("CustId"));
+                customerDTO.setName(resultSet.getString("CustName"));
+                customerDTO.setAddress(resultSet.getString("CustAddress"));
+                customerDTO.setContact(resultSet.getString("CustContact"));
+            }
+            System.out.println(customerDTO);
+            System.out.println(customerDTO.getName());
+            resp.setContentType("application/json");
+            var jsonb = JsonbBuilder.create();
+            jsonb.toJson(customerDTO,resp.getWriter());
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
