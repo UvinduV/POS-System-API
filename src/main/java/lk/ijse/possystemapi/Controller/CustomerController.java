@@ -1,15 +1,19 @@
 package lk.ijse.possystemapi.Controller;
 
 import java.io.*;
+import java.util.UUID;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import lk.ijse.possystemapi.dto.CustomerDTO;
 
-@WebServlet(urlPatterns = "/customer")
+@WebServlet(urlPatterns = "")
 public class CustomerController extends HttpServlet {
 
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -18,10 +22,12 @@ public class CustomerController extends HttpServlet {
             //send error
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
-        //JSON manipulate with Parson
-        JsonReader reader = Json.createReader(req.getReader());
-        JsonObject jsonObject = reader.readObject();
-        System.out.println(jsonObject.getString("name"));
+
+        String id  = UUID.randomUUID().toString();
+        Jsonb jsonb = JsonbBuilder.create();
+        CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
+        customerDTO.setCustid(id);
+        System.out.println(customerDTO);
 
 
     }
