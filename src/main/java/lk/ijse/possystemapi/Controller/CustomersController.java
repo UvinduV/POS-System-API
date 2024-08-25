@@ -23,7 +23,7 @@ public class CustomersController extends HttpServlet {
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
     static String GET_CUSTOMER="Select * from customer where CustId= ?";
     static String UPDATE_Customer="UPDATE customer SET CustName=?,CustAddress=?,CustContact=? WHERE CustId=?";
-    static String DELETE_STUDENT="DELETE from customer WHERE CustId=?";
+    static String DELETE_CUSTOMER="DELETE from customer WHERE CustId=?";
 
     @Override
     public void init() throws ServletException {
@@ -130,5 +130,19 @@ public class CustomersController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //Delete Customer
+        var custId = req.getParameter("id");
+        try (var writer = resp.getWriter()){
+            var ps = this.connection.prepareStatement(DELETE_CUSTOMER);
+            ps.setString(1, custId);
+            if(ps.executeUpdate() != 0){
+                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                writer.write("Customer Deleted");
+            }else {
+                writer.write("customer Delete Failed");
+            }
+        } catch (SQLException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
+        }
     }
 }
