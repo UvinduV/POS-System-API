@@ -21,6 +21,8 @@ public class CustomersController extends HttpServlet {
     private Connection connection;
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
     static String GET_CUSTOMER="Select * from customer where CustId= ?";
+    static String UPDATE_Customer="UPDATE customer SET CustName=?,CustAddress=?,CustContact=? WHERE CustId=?";
+    static String DELETE_STUDENT="DELETE from customer WHERE CustId=?";
 
     @Override
     public void init() throws ServletException {
@@ -69,7 +71,7 @@ public class CustomersController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        //Get Customer
         var customerDTO=new CustomerDTO();
         var custId = req.getParameter("id");
 
@@ -92,5 +94,35 @@ public class CustomersController extends HttpServlet {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Update Customer
+        if(!req.getContentType().toLowerCase().startsWith("application/json")|| req.getContentType() == null){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        }
+        try {
+            var ps = this.connection.prepareStatement(UPDATE_Customer);
+            var custId = req.getParameter("id");
+            Jsonb jsonb = JsonbBuilder.create();
+            var updatedCustomer = jsonb.fromJson(req.getReader(), CustomerDTO.class);
+            ps.setString(1, updatedCustomer.getName());
+            ps.setString(2, updatedCustomer.getAddress());
+            ps.setString(3, updatedCustomer.getContact());
+            ps.setString(4, custId);
+            if(ps.executeUpdate() != 0){
+                resp.getWriter().write("Customer Updated");
+                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            }else {
+                resp.getWriter().write("Customer Update Failed");
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
