@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class CustomerDTO {
-    private String Custid;
-    private String CustName;
-    private String CustAddress;
-    private String CustContact;
+public class CustomerDTO implements Serializable {
+    private String id;
+    private String name;
+    private String address;
+    private String contact;
 }
