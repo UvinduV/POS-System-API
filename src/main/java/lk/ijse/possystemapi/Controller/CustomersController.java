@@ -78,6 +78,7 @@ public class CustomersController extends HttpServlet {
             customerDTO.setId(UtillProcess.generateCustomerId());
             System.out.println(customerDTO);
             var customer=customerDAO.saveCustomer(customerDTO,connection);
+            System.out.println("cust"+customer);
 
             if (customer) {
                 writer.write("Customer Save Successfully");

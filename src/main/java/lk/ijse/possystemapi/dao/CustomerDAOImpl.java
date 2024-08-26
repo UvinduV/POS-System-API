@@ -26,7 +26,6 @@ public class CustomerDAOImpl implements CustomerDAO{
 
             return ps.executeUpdate() !=0;
 
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
