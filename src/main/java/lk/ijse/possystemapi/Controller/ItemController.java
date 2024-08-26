@@ -72,4 +72,32 @@ public class ItemController extends HttpServlet {
 
     }
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //GetItem
+        var itemDTO=new ItemDTO();
+        var itemId = req.getParameter("id");
+
+        try (var writer = resp.getWriter()){
+            var ps = connection.prepareStatement(GET_ITEM);
+            ps.setString(1, itemId);
+            var resultSet = ps.executeQuery();
+            while (resultSet.next()){
+                itemDTO.setId(resultSet.getString("ItemId"));
+                itemDTO.setName(resultSet.getString("ItemName"));
+                itemDTO.setQty(resultSet.getInt("qty"));
+                itemDTO.setPrice(resultSet.getDouble("price"));
+            }
+            System.out.println(itemDTO);
+            System.out.println(itemDTO.getName());
+            resp.setContentType("application/json");
+            var jsonb = JsonbBuilder.create();
+            jsonb.toJson(itemDTO,resp.getWriter());
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
