@@ -1,5 +1,6 @@
 package lk.ijse.possystemapi.Controller;
 
+import jakarta.json.JsonException;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
@@ -7,6 +8,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.possystemapi.dao.CustomerDAO;
+import lk.ijse.possystemapi.dao.CustomerDAOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.dto.ItemDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;
@@ -19,6 +22,7 @@ import java.util.UUID;
 
 @WebServlet(urlPatterns = "/Customer")
 public class CustomersController extends HttpServlet {
+    CustomerDAO customerDAO = new CustomerDAOImpl();
     private Connection connection;
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
     static String GET_CUSTOMER="Select * from customer where CustId= ?";
@@ -46,7 +50,7 @@ public class CustomersController extends HttpServlet {
         }
 
         /*String id = UUID.randomUUID().toString();*/
-        Jsonb jsonb= JsonbBuilder.create();
+        /*Jsonb jsonb= JsonbBuilder.create();
         CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
         customerDTO.setId(UtillProcess.generateCustomerId());
         System.out.println(customerDTO);
@@ -66,6 +70,24 @@ public class CustomersController extends HttpServlet {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }*/
+
+        try (var writer = resp.getWriter()){
+            Jsonb jsonb= JsonbBuilder.create();
+            CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
+            customerDTO.setId(UtillProcess.generateCustomerId());
+            System.out.println(customerDTO);
+            var customer=customerDAO.saveCustomer(customerDTO,connection);
+
+            if (customer) {
+                writer.write("Customer Save Successfully");
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+            }else {
+                writer.write("Customer Save Failed");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
+        } catch (JsonException e) {
+            throw new RuntimeException(e);
         }
 
     }
@@ -73,11 +95,11 @@ public class CustomersController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //Get Customer
-        var customerDTO=new CustomerDTO();
+        /*var customerDTO=new CustomerDTO();*/
         var custId = req.getParameter("id");
 
         try (var writer = resp.getWriter()){
-            var ps = connection.prepareStatement(GET_CUSTOMER);
+            /*var ps = connection.prepareStatement(GET_CUSTOMER);
             ps.setString(1, custId);
             var resultSet = ps.executeQuery();
             while (resultSet.next()){
@@ -85,15 +107,15 @@ public class CustomersController extends HttpServlet {
                 customerDTO.setName(resultSet.getString("CustName"));
                 customerDTO.setAddress(resultSet.getString("CustAddress"));
                 customerDTO.setContact(resultSet.getString("CustContact"));
-            }
-            System.out.println(customerDTO);
-            System.out.println(customerDTO.getName());
+            }*/
+            var customer = customerDAO.getCustomer(custId,connection);
+
+            System.out.println(customer);
+            System.out.println(customer.getName());
             resp.setContentType("application/json");
             var jsonb = JsonbBuilder.create();
-            jsonb.toJson(customerDTO,resp.getWriter());
+            jsonb.toJson(customer,resp.getWriter());
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -103,27 +125,25 @@ public class CustomersController extends HttpServlet {
         if(!req.getContentType().toLowerCase().startsWith("application/json")|| req.getContentType() == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
-        try {
-            var ps = this.connection.prepareStatement(UPDATE_Customer);
-            var custId = req.getParameter("id");
-            Jsonb jsonb = JsonbBuilder.create();
-            var updatedCustomer = jsonb.fromJson(req.getReader(), CustomerDTO.class);
-            ps.setString(1, updatedCustomer.getName());
+
+        /*var ps = this.connection.prepareStatement(UPDATE_Customer);*/
+        var custId = req.getParameter("id");
+        Jsonb jsonb = JsonbBuilder.create();
+        var updatedCustomer = jsonb.fromJson(req.getReader(), CustomerDTO.class);
+
+            /*ps.setString(1, updatedCustomer.getName());
             ps.setString(2, updatedCustomer.getAddress());
             ps.setString(3, updatedCustomer.getContact());
-            ps.setString(4, custId);
-            if(ps.executeUpdate() != 0){
-                resp.getWriter().write("Customer Updated");
-                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            }else {
-                resp.getWriter().write("Customer Update Failed");
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
+            ps.setString(4, custId);*/
 
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if(customerDAO.updateCustomer(custId,updatedCustomer,connection)){
+            resp.getWriter().write("Customer Updated");
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        }else {
+            resp.getWriter().write("Customer Update Failed");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+
 
     }
 
@@ -132,15 +152,15 @@ public class CustomersController extends HttpServlet {
         //Delete Customer
         var custId = req.getParameter("id");
         try (var writer = resp.getWriter()){
-            var ps = this.connection.prepareStatement(DELETE_CUSTOMER);
-            ps.setString(1, custId);
-            if(ps.executeUpdate() != 0){
+            /*var ps = this.connection.prepareStatement(DELETE_CUSTOMER);
+            ps.setString(1, custId);*/
+            if(customerDAO.deleteCustomer(custId,connection)){
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 writer.write("Customer Deleted");
             }else {
                 writer.write("customer Delete Failed");
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         }
