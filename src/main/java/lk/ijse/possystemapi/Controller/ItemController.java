@@ -2,6 +2,7 @@ package lk.ijse.possystemapi.Controller;
 
 
 import jakarta.json.Json;
+import jakarta.json.JsonException;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import jakarta.json.bind.Jsonb;
@@ -11,6 +12,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.possystemapi.dao.CustomerDAO;
+import lk.ijse.possystemapi.dao.CustomerDAOImpl;
+import lk.ijse.possystemapi.dao.ItemDAO;
+import lk.ijse.possystemapi.dao.ItemDAOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.dto.ItemDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;
@@ -23,6 +28,7 @@ import java.util.UUID;
 
 @WebServlet(urlPatterns = "/Item")
 public class ItemController extends HttpServlet {
+    ItemDAO itemDAO =new ItemDAOImpl();
     private Connection connection;
     static String SAVE_ITEM = "INSERT INTO item (ItemId,ItemName,qty,price) VALUES (?,?,?,?)";
     static String GET_ITEM="Select * from item where ItemId= ?";
@@ -47,26 +53,22 @@ public class ItemController extends HttpServlet {
         if (!req.getContentType().toLowerCase().startsWith("application/json") || req.getContentType() == null) {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
+        try (var writer = resp.getWriter()){
+            Jsonb jsonb= JsonbBuilder.create();
+            ItemDTO itemDTO= jsonb.fromJson(req.getReader(), ItemDTO.class);
+            itemDTO.setId(UtillProcess.generateItemId());
+            System.out.println(itemDTO);
 
-        Jsonb jsonb= JsonbBuilder.create();
-        ItemDTO itemDTO= jsonb.fromJson(req.getReader(), ItemDTO.class);
-        itemDTO.setId(UtillProcess.generateItemId());
-        System.out.println(itemDTO);
+            var item=itemDAO.saveItem(itemDTO,connection);
 
-        try {
-            var ps = connection.prepareStatement(SAVE_ITEM);
-            ps.setString(1, itemDTO.getId());
-            ps.setString(2, itemDTO.getName());
-            ps.setInt(3,itemDTO.getQty());
-            ps.setString(4, String.valueOf(itemDTO.getPrice()));
-
-            if(ps.executeUpdate() != 0){
-                resp.getWriter().write("item Saved");
+            if (item) {
+                writer.write("Item Save Successfully");
+                resp.setStatus(HttpServletResponse.SC_CREATED);
             }else {
-                resp.getWriter().write("item Not Saved");
+                writer.write("Item Save Failed");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
-
-        } catch (SQLException e) {
+        } catch (JsonException e) {
             throw new RuntimeException(e);
         }
 
@@ -75,26 +77,19 @@ public class ItemController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //GetItem
-        var itemDTO=new ItemDTO();
+
         var itemId = req.getParameter("id");
 
         try (var writer = resp.getWriter()){
-            var ps = connection.prepareStatement(GET_ITEM);
-            ps.setString(1, itemId);
-            var resultSet = ps.executeQuery();
-            while (resultSet.next()){
-                itemDTO.setId(resultSet.getString("ItemId"));
-                itemDTO.setName(resultSet.getString("ItemName"));
-                itemDTO.setQty(resultSet.getInt("qty"));
-                itemDTO.setPrice(resultSet.getDouble("price"));
-            }
-            System.out.println(itemDTO);
-            System.out.println(itemDTO.getName());
+            var item=itemDAO.getItem(itemId,connection);
+
+            System.out.println(item);
+            System.out.println(item.getName());
             resp.setContentType("application/json");
             var jsonb = JsonbBuilder.create();
-            jsonb.toJson(itemDTO,resp.getWriter());
+            jsonb.toJson(item,resp.getWriter());
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -106,15 +101,11 @@ public class ItemController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
         try {
-            var ps = this.connection.prepareStatement(UPDATE_ITEM);
+
             var itemId = req.getParameter("id");
             Jsonb jsonb = JsonbBuilder.create();
             var updatedItem = jsonb.fromJson(req.getReader(), ItemDTO.class);
-            ps.setString(1, updatedItem.getName());
-            ps.setInt(2,updatedItem.getQty());
-            ps.setString(3, String.valueOf(updatedItem.getPrice()));
-            ps.setString(4, itemId);
-            if(ps.executeUpdate() != 0){
+            if(itemDAO.updateItem(itemId,updatedItem,connection)){
                 resp.getWriter().write("Item Updated");
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             }else {
@@ -122,7 +113,7 @@ public class ItemController extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -132,15 +123,13 @@ public class ItemController extends HttpServlet {
         //Delete Item
         var itemId = req.getParameter("id");
         try (var writer = resp.getWriter()){
-            var ps = this.connection.prepareStatement(DELETE_ITEM);
-            ps.setString(1, itemId);
-            if(ps.executeUpdate() != 0){
+            if(itemDAO.deleteItem(itemId,connection)){
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 writer.write("item Deleted");
             }else {
                 writer.write("item Delete Failed");
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         }
