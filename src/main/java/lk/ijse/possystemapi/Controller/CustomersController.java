@@ -8,6 +8,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.possystemapi.bo.CustomerBO;
+import lk.ijse.possystemapi.bo.CustomerBOImpl;
 import lk.ijse.possystemapi.dao.CustomerDAO;
 import lk.ijse.possystemapi.dao.CustomerDAOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
@@ -18,11 +20,13 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 @WebServlet(urlPatterns = "/Customer")
 public class CustomersController extends HttpServlet {
-    CustomerDAO customerDAO = new CustomerDAOImpl();
+    /*CustomerDAO customerDAO = new CustomerDAOImpl();*/
+    CustomerBO customerBO = new CustomerBOImpl();
     private Connection connection;
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
     static String GET_CUSTOMER="Select * from customer where CustId= ?";
@@ -77,7 +81,7 @@ public class CustomersController extends HttpServlet {
             CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
             customerDTO.setId(UtillProcess.generateCustomerId());
             System.out.println(customerDTO);
-            var customer=customerDAO.saveCustomer(customerDTO,connection);
+            var customer=customerBO.saveCustomer(customerDTO,connection);
             System.out.println("cust"+customer);
 
             if (customer) {
@@ -109,13 +113,13 @@ public class CustomersController extends HttpServlet {
                 customerDTO.setAddress(resultSet.getString("CustAddress"));
                 customerDTO.setContact(resultSet.getString("CustContact"));
             }*/
-            var customer = customerDAO.getCustomer(custId,connection);
+            List<CustomerDTO>customer = customerBO.getCustomer(connection);
 
             System.out.println(customer);
-            System.out.println(customer.getName());
+            /*System.out.println(customer);*/
             resp.setContentType("application/json");
             var jsonb = JsonbBuilder.create();
-            jsonb.toJson(customer,resp.getWriter());
+            jsonb.toJson(customer,writer);
 
         }
     }
@@ -137,7 +141,7 @@ public class CustomersController extends HttpServlet {
             ps.setString(3, updatedCustomer.getContact());
             ps.setString(4, custId);*/
 
-        if(customerDAO.updateCustomer(custId,updatedCustomer,connection)){
+        if(customerBO.updateCustomer(custId,updatedCustomer,connection)){
             resp.getWriter().write("Customer Updated");
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }else {
@@ -155,7 +159,7 @@ public class CustomersController extends HttpServlet {
         try (var writer = resp.getWriter()){
             /*var ps = this.connection.prepareStatement(DELETE_CUSTOMER);
             ps.setString(1, custId);*/
-            if(customerDAO.deleteCustomer(custId,connection)){
+            if(customerBO.deleteCustomer(custId,connection)){
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 writer.write("Customer Deleted");
             }else {

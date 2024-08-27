@@ -6,6 +6,8 @@ import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.entity.Customer;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerBOImpl implements CustomerBO{
     CustomerDAO customerDAO= new CustomerDAOImpl();
@@ -15,8 +17,19 @@ public class CustomerBOImpl implements CustomerBO{
     }
 
     @Override
-    public CustomerDTO getCustomer(String customerId, Connection connection) {
-        return null;
+    public List<CustomerDTO> getCustomer(Connection connection) {
+        List<Customer> customers = customerDAO.getCustomer(connection);
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+
+        for(Customer customer : customers){
+            CustomerDTO customerDTO = new CustomerDTO();
+            customerDTO.setId(customer.getCustomerId());
+            customerDTO.setName(customer.getCustomerName());
+            customerDTO.setAddress(customer.getCustomerAddress());
+            customerDTO.setContact(customer.getCustomerContact());
+            customerDTOS.add(customerDTO);
+        }
+        return customerDTOS;
     }
 
     @Override

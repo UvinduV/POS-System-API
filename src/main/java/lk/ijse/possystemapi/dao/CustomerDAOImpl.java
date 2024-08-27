@@ -4,25 +4,28 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.possystemapi.dto.CustomerDTO;
+import lk.ijse.possystemapi.entity.Customer;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO{
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
-    static String GET_CUSTOMER="Select * from customer where CustId= ?";
+    static String GET_CUSTOMER="Select * from customer ";
     static String UPDATE_Customer="UPDATE customer SET CustName=?,CustAddress=?,CustContact=? WHERE CustId=?";
     static String DELETE_CUSTOMER="DELETE from customer WHERE CustId=?";
     @Override
-    public boolean saveCustomer(CustomerDTO customerDTO, Connection connection) {
+    public boolean saveCustomer(Customer entity, Connection connection) {
 
         try {
             var ps = connection.prepareStatement(SAVE_CUSTOMER);
-            ps.setString(1, customerDTO.getId());
-            ps.setString(2, customerDTO.getName());
-            ps.setString(3, customerDTO.getAddress());
-            ps.setString(4, customerDTO.getContact());
-            System.out.println("dao"+customerDTO);
+            ps.setString(1, entity.getCustomerId());
+            ps.setString(2, entity.getCustomerName());
+            ps.setString(3, entity.getCustomerAddress());
+            ps.setString(4, entity.getCustomerContact());
+            System.out.println("dao"+entity);
 
             return ps.executeUpdate() !=0;
 
@@ -32,8 +35,8 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
     @Override
-    public CustomerDTO getCustomer(String customerId, Connection connection) {
-        var customerDTO=new CustomerDTO();
+    public List<Customer> getCustomer( Connection connection) {
+        /*var customerDTO=new CustomerDTO();
 
         try {
             var ps = connection.prepareStatement(GET_CUSTOMER);
@@ -49,7 +52,23 @@ public class CustomerDAOImpl implements CustomerDAO{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return customerDTO;
+        return customerDTO;*/
+        List<Customer> customers = new ArrayList<>();
+        try {
+            var preparedStatement = connection.prepareStatement(GET_CUSTOMER);
+            var resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                var customer = new Customer();
+                customer.setCustomerId(resultSet.getString("CustId"));
+                customer.setCustomerName(resultSet.getString("CustName"));
+                customer.setCustomerAddress(resultSet.getString("CustAddress"));
+                customer.setCustomerContact(resultSet.getString("CustContact"));
+                customers.add(customer);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return customers;
 
     }
 
