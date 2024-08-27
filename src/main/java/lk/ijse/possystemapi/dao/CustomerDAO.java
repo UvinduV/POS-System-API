@@ -9,6 +9,7 @@ import java.util.List;
 public interface CustomerDAO {
     boolean saveCustomer(Customer entity, Connection connection);
     List<Customer> getCustomer(Connection connection);
-    boolean updateCustomer(String customerId, CustomerDTO updatedCustomer, Connection connection);
+    boolean updateCustomer(String customerId, Customer customer, Connection connection);
     boolean deleteCustomer(String customerId, Connection connection);
+
 }

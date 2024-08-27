@@ -34,11 +34,12 @@ public class CustomerBOImpl implements CustomerBO{
 
     @Override
     public boolean updateCustomer(String customerId, CustomerDTO updatedCustomer, Connection connection) {
-        return false;
+        Customer customer = new Customer(customerId, updatedCustomer.getName(), updatedCustomer.getAddress(), updatedCustomer.getContact());
+        return customerDAO.updateCustomer(customerId, customer, connection);
     }
 
     @Override
     public boolean deleteCustomer(String customerId, Connection connection) {
-        return false;
+        return customerDAO.deleteCustomer(customerId,connection);
     }
 }

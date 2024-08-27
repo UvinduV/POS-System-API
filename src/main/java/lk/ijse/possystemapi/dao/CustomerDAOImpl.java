@@ -73,12 +73,12 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
     @Override
-    public boolean updateCustomer(String customerId, CustomerDTO updatedCustomer, Connection connection) {
+    public boolean updateCustomer(String customerId, Customer customer, Connection connection) {
         try {
             var ps = connection.prepareStatement(UPDATE_Customer);
-            ps.setString(1, updatedCustomer.getName());
-            ps.setString(2, updatedCustomer.getAddress());
-            ps.setString(3, updatedCustomer.getContact());
+            ps.setString(1, customer.getCustomerName());
+            ps.setString(2, customer.getCustomerAddress());
+            ps.setString(3, customer.getCustomerContact());
             ps.setString(4, customerId);
             return ps.executeUpdate() != 0;
 
