@@ -12,6 +12,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.possystemapi.bo.ItemBO;
+import lk.ijse.possystemapi.bo.ItemBOImpl;
 import lk.ijse.possystemapi.dao.CustomerDAO;
 import lk.ijse.possystemapi.dao.CustomerDAOImpl;
 import lk.ijse.possystemapi.dao.ItemDAO;
@@ -28,7 +30,8 @@ import java.util.UUID;
 
 @WebServlet(urlPatterns = "/Item")
 public class ItemController extends HttpServlet {
-    ItemDAO itemDAO =new ItemDAOImpl();
+    /*ItemDAO itemDAO =new ItemDAOImpl();*/
+    ItemBO itemBO = new ItemBOImpl();
     private Connection connection;
     static String SAVE_ITEM = "INSERT INTO item (ItemId,ItemName,qty,price) VALUES (?,?,?,?)";
     static String GET_ITEM="Select * from item where ItemId= ?";
@@ -59,7 +62,7 @@ public class ItemController extends HttpServlet {
             itemDTO.setId(UtillProcess.generateItemId());
             System.out.println(itemDTO);
 
-            var item=itemDAO.saveItem(itemDTO,connection);
+            var item=itemBO.saveItem(itemDTO,connection);
 
             if (item) {
                 writer.write("Item Save Successfully");
@@ -81,7 +84,7 @@ public class ItemController extends HttpServlet {
         var itemId = req.getParameter("id");
 
         try (var writer = resp.getWriter()){
-            var item=itemDAO.getItem(itemId,connection);
+            var item=itemBO.getItem(itemId,connection);
 
             System.out.println(item);
             System.out.println(item.getName());
@@ -105,7 +108,8 @@ public class ItemController extends HttpServlet {
             var itemId = req.getParameter("id");
             Jsonb jsonb = JsonbBuilder.create();
             var updatedItem = jsonb.fromJson(req.getReader(), ItemDTO.class);
-            if(itemDAO.updateItem(itemId,updatedItem,connection)){
+
+            if(itemBO.updateItem(itemId,updatedItem,connection)){
                 resp.getWriter().write("Item Updated");
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             }else {
@@ -123,7 +127,7 @@ public class ItemController extends HttpServlet {
         //Delete Item
         var itemId = req.getParameter("id");
         try (var writer = resp.getWriter()){
-            if(itemDAO.deleteItem(itemId,connection)){
+            if(itemBO.deleteItem(itemId,connection)){
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 writer.write("item Deleted");
             }else {
