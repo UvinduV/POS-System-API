@@ -14,14 +14,14 @@ public class ItemDAOImpl implements ItemDAO {
     static String UPDATE_ITEM="UPDATE item SET ItemName=?,qty=?,price=? WHERE ItemId=?";
     static String DELETE_ITEM="DELETE from item WHERE ItemId=?";
     @Override
-    public boolean saveItem(Item entity, Connection connection) {
+    public boolean save(Item entity, Connection connection) {
         try {
             var ps = connection.prepareStatement(SAVE_ITEM);
             ps.setString(1, entity.getItemId());
             ps.setString(2, entity.getItemName());
             ps.setInt(3,entity.getQty());
             ps.setString(4, String.valueOf(entity.getPrice()));
-
+            System.out.println("dao"+entity);
             return ps.executeUpdate() !=0;
 
         } catch (SQLException e) {
@@ -30,7 +30,7 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public List<Item> getItem(Connection connection){
+    public List<Item> get(Connection connection){
 
         List<Item> items = new ArrayList<>();
         try {
@@ -52,12 +52,12 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public boolean updateItem(String itemId, Item item, Connection connection) {
+    public boolean update(String itemId, Item entity, Connection connection) {
         try {
             var ps = connection.prepareStatement(UPDATE_ITEM);
-            ps.setString(1, item.getItemName());
-            ps.setInt(2,item.getQty());
-            ps.setString(3, String.valueOf(item.getPrice()));
+            ps.setString(1, entity.getItemName());
+            ps.setInt(2,entity.getQty());
+            ps.setString(3, String.valueOf(entity.getPrice()));
             ps.setString(4, itemId);
             return ps.executeUpdate() != 0;
 
@@ -67,7 +67,7 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
     @Override
-    public boolean deleteItem(String itemId, Connection connection) {
+    public boolean delete(String itemId, Connection connection) {
         try {
             var ps = connection.prepareStatement(DELETE_ITEM);
             ps.setString(1, itemId);
