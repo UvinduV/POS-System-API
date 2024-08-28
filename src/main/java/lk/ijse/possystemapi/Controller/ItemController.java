@@ -14,6 +14,9 @@ import lk.ijse.possystemapi.bo.ItemBOImpl;
 import lk.ijse.possystemapi.dto.ItemDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -32,13 +35,10 @@ public class ItemController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            var driverCalss = getServletContext().getInitParameter("driver-class");
-            var dbUrl = getServletContext().getInitParameter("dbURL");
-            var userName = getServletContext().getInitParameter("dbUserName");
-            var password = getServletContext().getInitParameter("dbPassword");
-            Class.forName(driverCalss);
-            this.connection =  DriverManager.getConnection(dbUrl,userName,password);
-        }catch (ClassNotFoundException | SQLException e){
+            var ctx=new InitialContext();
+            DataSource pool = (DataSource)ctx.lookup("java:comp/env/jdbc/POSSystemApi");
+            this.connection= pool.getConnection();
+        }catch (SQLException | NamingException e){
             e.printStackTrace();
         }
     }
