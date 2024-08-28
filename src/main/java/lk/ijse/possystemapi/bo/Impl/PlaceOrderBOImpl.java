@@ -1,5 +1,6 @@
-package lk.ijse.possystemapi.bo;
+package lk.ijse.possystemapi.bo.Impl;
 
+import lk.ijse.possystemapi.bo.PlaceOrderBO;
 import lk.ijse.possystemapi.dao.Custom.OrderDAO;
 import lk.ijse.possystemapi.dao.Custom.OrderDetailDAO;
 import lk.ijse.possystemapi.dao.Impl.OrderDAOImpl;
@@ -11,7 +12,7 @@ import lk.ijse.possystemapi.entity.Orders;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class PlaceOrderBOImpl implements PlaceOrderBO{
+public class PlaceOrderBOImpl implements PlaceOrderBO {
     OrderDAO orderDAO = new OrderDAOImpl();
     OrderDetailDAO orderDetailDAO = new OrderDetailDAOImpl();
     @Override

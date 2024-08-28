@@ -9,17 +9,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.possystemapi.bo.PlaceOrderBO;
-import lk.ijse.possystemapi.bo.PlaceOrderBOImpl;
-import lk.ijse.possystemapi.dto.CustomerDTO;
+import lk.ijse.possystemapi.bo.Impl.PlaceOrderBOImpl;
 import lk.ijse.possystemapi.dto.PlaceOrderDTO;
-import lk.ijse.possystemapi.utill.UtillProcess;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/Order")

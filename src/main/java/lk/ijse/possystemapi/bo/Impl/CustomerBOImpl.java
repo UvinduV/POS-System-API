@@ -1,5 +1,6 @@
-package lk.ijse.possystemapi.bo;
+package lk.ijse.possystemapi.bo.Impl;
 
+import lk.ijse.possystemapi.bo.CustomerBO;
 import lk.ijse.possystemapi.dao.Custom.CustomerDAO;
 import lk.ijse.possystemapi.dao.Impl.CustomerDAOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
@@ -9,7 +10,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerBOImpl implements CustomerBO{
+public class CustomerBOImpl implements CustomerBO {
     CustomerDAO customerDAO= new CustomerDAOImpl();
     @Override
     public boolean saveCustomer(CustomerDTO customerDTO, Connection connection) {
