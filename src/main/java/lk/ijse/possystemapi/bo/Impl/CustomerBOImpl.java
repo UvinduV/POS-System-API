@@ -2,6 +2,7 @@ package lk.ijse.possystemapi.bo.Impl;
 
 import lk.ijse.possystemapi.bo.Custom.CustomerBO;
 import lk.ijse.possystemapi.dao.Custom.CustomerDAO;
+import lk.ijse.possystemapi.dao.DAOFactory;
 import lk.ijse.possystemapi.dao.Impl.CustomerDAOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.entity.Customer;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerBOImpl implements CustomerBO {
-    CustomerDAO customerDAO= new CustomerDAOImpl();
+    CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getDaoFactory().getDao(DAOFactory.DAOTypes.CUSTOMER);
     @Override
     public boolean saveCustomer(CustomerDTO customerDTO, Connection connection) {
         return customerDAO.save(new Customer(customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress(), customerDTO.getContact()),connection);

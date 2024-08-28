@@ -1,7 +1,9 @@
 package lk.ijse.possystemapi.bo.Impl;
 
 import lk.ijse.possystemapi.bo.Custom.ItemBO;
+import lk.ijse.possystemapi.dao.Custom.CustomerDAO;
 import lk.ijse.possystemapi.dao.Custom.ItemDAO;
+import lk.ijse.possystemapi.dao.DAOFactory;
 import lk.ijse.possystemapi.dao.Impl.ItemDAOImpl;
 import lk.ijse.possystemapi.dto.ItemDTO;
 import lk.ijse.possystemapi.entity.Item;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemBOImpl implements ItemBO {
-    ItemDAO itemDAO= new ItemDAOImpl();
+    ItemDAO itemDAO= (ItemDAO) DAOFactory.getDaoFactory().getDao(DAOFactory.DAOTypes.ITEM);
 
     @Override
     public boolean saveItem(ItemDTO itemDTO, Connection connection) {
