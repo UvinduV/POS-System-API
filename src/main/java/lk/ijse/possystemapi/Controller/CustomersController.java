@@ -55,27 +55,6 @@ public class CustomersController extends HttpServlet {
         }
 
         /*String id = UUID.randomUUID().toString();*/
-        /*Jsonb jsonb= JsonbBuilder.create();
-        CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
-        customerDTO.setId(UtillProcess.generateCustomerId());
-        System.out.println(customerDTO);
-
-        try {
-            var ps = connection.prepareStatement(SAVE_CUSTOMER);
-            ps.setString(1, customerDTO.getId());
-            ps.setString(2, customerDTO.getName());
-            ps.setString(3, customerDTO.getAddress());
-            ps.setString(4, customerDTO.getContact());
-
-            if(ps.executeUpdate() != 0){
-                resp.getWriter().write("Customer Saved");
-            }else {
-                resp.getWriter().write("customer Not Saved");
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }*/
 
         try (var writer = resp.getWriter()){
             Jsonb jsonb= JsonbBuilder.create();
@@ -101,19 +80,11 @@ public class CustomersController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //Get Customer
-        /*var customerDTO=new CustomerDTO();*/
+
         var custId = req.getParameter("id");
 
         try (var writer = resp.getWriter()){
-            /*var ps = connection.prepareStatement(GET_CUSTOMER);
-            ps.setString(1, custId);
-            var resultSet = ps.executeQuery();
-            while (resultSet.next()){
-                customerDTO.setId(resultSet.getString("CustId"));
-                customerDTO.setName(resultSet.getString("CustName"));
-                customerDTO.setAddress(resultSet.getString("CustAddress"));
-                customerDTO.setContact(resultSet.getString("CustContact"));
-            }*/
+
             List<CustomerDTO>customer = customerBO.getCustomer(connection);
 
             System.out.println(customer);
@@ -132,15 +103,11 @@ public class CustomersController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
 
-        /*var ps = this.connection.prepareStatement(UPDATE_Customer);*/
+
         var custId = req.getParameter("id");
         Jsonb jsonb = JsonbBuilder.create();
         var updatedCustomer = jsonb.fromJson(req.getReader(), CustomerDTO.class);
 
-            /*ps.setString(1, updatedCustomer.getName());
-            ps.setString(2, updatedCustomer.getAddress());
-            ps.setString(3, updatedCustomer.getContact());
-            ps.setString(4, custId);*/
 
         if(customerBO.updateCustomer(custId,updatedCustomer,connection)){
             resp.getWriter().write("Customer Updated");
@@ -158,8 +125,6 @@ public class CustomersController extends HttpServlet {
         //Delete Customer
         var custId = req.getParameter("id");
         try (var writer = resp.getWriter()){
-            /*var ps = this.connection.prepareStatement(DELETE_CUSTOMER);
-            ps.setString(1, custId);*/
             if(customerBO.deleteCustomer(custId,connection)){
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 writer.write("Customer Deleted");
