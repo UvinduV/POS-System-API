@@ -15,7 +15,6 @@ public class PlaceOrderDTO implements Serializable {
     private String customerId;
     private Date orderDate;
     private double total;
-
     private String itemCode;
     private int qty;
     private double unitPrice;

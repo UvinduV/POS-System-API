@@ -43,12 +43,15 @@ public class PlaceOrderController extends HttpServlet {
         }
         try (var writer = resp.getWriter()){
             Jsonb jsonb= JsonbBuilder.create();
-            PlaceOrderDTO placeOrderDTO = jsonb.fromJson(req.getReader(), PlaceOrderDTO.class);
+            System.out.println("go to dto");
+            PlaceOrderDTO placeOrderDTO = jsonb.fromJson(req.getReader(),PlaceOrderDTO.class);
 
             if (placeOrderDTO == null ) {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect data");
                 return;
             }
+            System.out.println("placeODto : "+placeOrderDTO);
+            writer.write("order place Successfully");
 
             var reciveOrder = placeOrderBO.placeOrder(placeOrderDTO,connection);
             System.out.println("place order controller"+ reciveOrder);
