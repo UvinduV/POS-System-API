@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.possystemapi.bo.BOFactory;
 import lk.ijse.possystemapi.bo.Custom.ItemBO;
 import lk.ijse.possystemapi.bo.Impl.ItemBOImpl;
 import lk.ijse.possystemapi.dto.ItemDTO;
@@ -25,7 +26,7 @@ import java.util.List;
 @WebServlet(urlPatterns = "/Item")
 public class ItemController extends HttpServlet {
     /*ItemDAO itemDAO =new ItemDAOImpl();*/
-    ItemBO itemBO = new ItemBOImpl();
+    ItemBO itemBO = (ItemBO) BOFactory.getBOFactory().getBo(BOFactory.BOTypes.ITEM);
     private Connection connection;
     static String SAVE_ITEM = "INSERT INTO item (ItemId,ItemName,qty,price) VALUES (?,?,?,?)";
     static String GET_ITEM="Select * from item where ItemId= ?";

@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.possystemapi.bo.BOFactory;
 import lk.ijse.possystemapi.bo.Custom.PlaceOrderBO;
 import lk.ijse.possystemapi.bo.Impl.PlaceOrderBOImpl;
 import lk.ijse.possystemapi.dto.PlaceOrderDTO;
@@ -21,7 +22,7 @@ import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/Order")
 public class PlaceOrderController extends HttpServlet {
-    PlaceOrderBO placeOrderBO= new PlaceOrderBOImpl();
+    PlaceOrderBO placeOrderBO= (PlaceOrderBO) BOFactory.getBOFactory().getBo(BOFactory.BOTypes.ORDER);
     Connection connection;
     @Override
     public void init() throws ServletException {

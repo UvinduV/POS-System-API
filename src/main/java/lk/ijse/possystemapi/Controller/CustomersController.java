@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.possystemapi.bo.BOFactory;
 import lk.ijse.possystemapi.bo.Custom.CustomerBO;
 import lk.ijse.possystemapi.bo.Impl.CustomerBOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/Customer")
 public class CustomersController extends HttpServlet {
-    CustomerBO customerBO = new CustomerBOImpl();
+    CustomerBO customerBO = (CustomerBO) BOFactory.getBOFactory().getBo(BOFactory.BOTypes.CUSTOMER);;
     private Connection connection;
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
     static String GET_CUSTOMER="Select * from customer where CustId= ?";
