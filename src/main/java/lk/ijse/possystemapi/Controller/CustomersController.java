@@ -25,7 +25,6 @@ import java.util.UUID;
 
 @WebServlet(urlPatterns = "/Customer")
 public class CustomersController extends HttpServlet {
-    /*CustomerDAO customerDAO = new CustomerDAOImpl();*/
     CustomerBO customerBO = new CustomerBOImpl();
     private Connection connection;
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";

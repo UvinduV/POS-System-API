@@ -25,7 +25,7 @@ public class ItemBOImpl implements ItemBO {
         List<ItemDTO> itemDTOS = new ArrayList<>();
 
         for(Item item : items){
-            /*CustomerDTO customerDTO = new CustomerDTO();*/
+
             ItemDTO itemDTO=new ItemDTO();
             itemDTO.setId(item.getItemId());
             itemDTO.setName(item.getItemName());
