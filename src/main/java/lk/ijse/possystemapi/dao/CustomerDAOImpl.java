@@ -17,7 +17,7 @@ public class CustomerDAOImpl implements CustomerDAO{
     static String UPDATE_Customer="UPDATE customer SET CustName=?,CustAddress=?,CustContact=? WHERE CustId=?";
     static String DELETE_CUSTOMER="DELETE from customer WHERE CustId=?";
     @Override
-    public boolean saveCustomer(Customer entity, Connection connection) {
+    public boolean save(Customer entity, Connection connection) {
 
         try {
             var ps = connection.prepareStatement(SAVE_CUSTOMER);
@@ -35,7 +35,7 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
     @Override
-    public List<Customer> getCustomer( Connection connection) {
+    public List<Customer> get( Connection connection) {
         /*var customerDTO=new CustomerDTO();
 
         try {
@@ -73,12 +73,12 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
     @Override
-    public boolean updateCustomer(String customerId, Customer customer, Connection connection) {
+    public boolean update(String customerId, Customer entity, Connection connection) {
         try {
             var ps = connection.prepareStatement(UPDATE_Customer);
-            ps.setString(1, customer.getCustomerName());
-            ps.setString(2, customer.getCustomerAddress());
-            ps.setString(3, customer.getCustomerContact());
+            ps.setString(1, entity.getCustomerName());
+            ps.setString(2, entity.getCustomerAddress());
+            ps.setString(3, entity.getCustomerContact());
             ps.setString(4, customerId);
             return ps.executeUpdate() != 0;
 
@@ -88,7 +88,7 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
     @Override
-    public boolean deleteCustomer(String customerId, Connection connection) {
+    public boolean delete(String customerId, Connection connection) {
         try{
             var ps = connection.prepareStatement(DELETE_CUSTOMER);
             ps.setString(1, customerId);

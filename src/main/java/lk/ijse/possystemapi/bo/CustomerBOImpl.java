@@ -13,12 +13,12 @@ public class CustomerBOImpl implements CustomerBO{
     CustomerDAO customerDAO= new CustomerDAOImpl();
     @Override
     public boolean saveCustomer(CustomerDTO customerDTO, Connection connection) {
-        return customerDAO.saveCustomer(new Customer(customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress(), customerDTO.getContact()),connection);
+        return customerDAO.save(new Customer(customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress(), customerDTO.getContact()),connection);
     }
 
     @Override
     public List<CustomerDTO> getCustomer(Connection connection) {
-        List<Customer> customers = customerDAO.getCustomer(connection);
+        List<Customer> customers = customerDAO.get(connection);
         List<CustomerDTO> customerDTOS = new ArrayList<>();
 
         for(Customer customer : customers){
@@ -35,11 +35,11 @@ public class CustomerBOImpl implements CustomerBO{
     @Override
     public boolean updateCustomer(String customerId, CustomerDTO updatedCustomer, Connection connection) {
         Customer customer = new Customer(customerId, updatedCustomer.getName(), updatedCustomer.getAddress(), updatedCustomer.getContact());
-        return customerDAO.updateCustomer(customerId, customer, connection);
+        return customerDAO.update(customerId, customer, connection);
     }
 
     @Override
     public boolean deleteCustomer(String customerId, Connection connection) {
-        return customerDAO.deleteCustomer(customerId,connection);
+        return customerDAO.delete(customerId,connection);
     }
 }
