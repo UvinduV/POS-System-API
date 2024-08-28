@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 @WebServlet(urlPatterns = "/Item")
@@ -84,10 +85,10 @@ public class ItemController extends HttpServlet {
         var itemId = req.getParameter("id");
 
         try (var writer = resp.getWriter()){
-            var item=itemBO.getItem(itemId,connection);
+            List<ItemDTO> item=itemBO.getItem(connection);
 
             System.out.println(item);
-            System.out.println(item.getName());
+            /*System.out.println(item.getName());*/
             resp.setContentType("application/json");
             var jsonb = JsonbBuilder.create();
             jsonb.toJson(item,resp.getWriter());
