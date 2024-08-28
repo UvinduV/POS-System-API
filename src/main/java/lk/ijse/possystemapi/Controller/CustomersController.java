@@ -26,10 +26,6 @@ import java.util.List;
 public class CustomersController extends HttpServlet {
     CustomerBO customerBO = (CustomerBO) BOFactory.getBOFactory().getBo(BOFactory.BOTypes.CUSTOMER);;
     private Connection connection;
-    static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
-    static String GET_CUSTOMER="Select * from customer where CustId= ?";
-    static String UPDATE_Customer="UPDATE customer SET CustName=?,CustAddress=?,CustContact=? WHERE CustId=?";
-    static String DELETE_CUSTOMER="DELETE from customer WHERE CustId=?";
 
     @Override
     public void init() throws ServletException {

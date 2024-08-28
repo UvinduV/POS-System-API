@@ -28,10 +28,6 @@ public class ItemController extends HttpServlet {
     /*ItemDAO itemDAO =new ItemDAOImpl();*/
     ItemBO itemBO = (ItemBO) BOFactory.getBOFactory().getBo(BOFactory.BOTypes.ITEM);
     private Connection connection;
-    static String SAVE_ITEM = "INSERT INTO item (ItemId,ItemName,qty,price) VALUES (?,?,?,?)";
-    static String GET_ITEM="Select * from item where ItemId= ?";
-    static String UPDATE_ITEM="UPDATE item SET ItemName=?,qty=?,price=? WHERE ItemId=?";
-    static String DELETE_ITEM="DELETE from item WHERE ItemId=?";
     @Override
     public void init() throws ServletException {
         try {
