@@ -10,10 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.possystemapi.bo.CustomerBO;
 import lk.ijse.possystemapi.bo.CustomerBOImpl;
-import lk.ijse.possystemapi.dao.CustomerDAO;
-import lk.ijse.possystemapi.dao.CustomerDAOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
-import lk.ijse.possystemapi.dto.ItemDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;
 
 import java.io.IOException;
@@ -21,7 +18,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 @WebServlet(urlPatterns = "/Customer")
 public class CustomersController extends HttpServlet {

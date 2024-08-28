@@ -1,10 +1,7 @@
 package lk.ijse.possystemapi.Controller;
 
 
-import jakarta.json.Json;
 import jakarta.json.JsonException;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
@@ -14,11 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.possystemapi.bo.ItemBO;
 import lk.ijse.possystemapi.bo.ItemBOImpl;
-import lk.ijse.possystemapi.dao.CustomerDAO;
-import lk.ijse.possystemapi.dao.CustomerDAOImpl;
-import lk.ijse.possystemapi.dao.ItemDAO;
-import lk.ijse.possystemapi.dao.ItemDAOImpl;
-import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.dto.ItemDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;
 
@@ -27,7 +19,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 @WebServlet(urlPatterns = "/Item")
 public class ItemController extends HttpServlet {

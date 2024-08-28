@@ -1,9 +1,6 @@
-package lk.ijse.possystemapi.dao;
+package lk.ijse.possystemapi.dao.Impl;
 
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
-import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.possystemapi.dto.CustomerDTO;
+import lk.ijse.possystemapi.dao.Custom.CustomerDAO;
 import lk.ijse.possystemapi.entity.Customer;
 
 import java.sql.Connection;
@@ -11,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerDAOImpl implements CustomerDAO{
+public class CustomerDAOImpl implements CustomerDAO {
     static String SAVE_CUSTOMER = "INSERT INTO customer (CustId,CustName,CustAddress,CustContact) VALUES (?,?,?,?)";
     static String GET_CUSTOMER="Select * from customer ";
     static String UPDATE_Customer="UPDATE customer SET CustName=?,CustAddress=?,CustContact=? WHERE CustId=?";

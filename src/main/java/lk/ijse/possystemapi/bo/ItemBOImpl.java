@@ -1,10 +1,8 @@
 package lk.ijse.possystemapi.bo;
 
-import lk.ijse.possystemapi.dao.ItemDAO;
-import lk.ijse.possystemapi.dao.ItemDAOImpl;
-import lk.ijse.possystemapi.dto.CustomerDTO;
+import lk.ijse.possystemapi.dao.Custom.ItemDAO;
+import lk.ijse.possystemapi.dao.Impl.ItemDAOImpl;
 import lk.ijse.possystemapi.dto.ItemDTO;
-import lk.ijse.possystemapi.entity.Customer;
 import lk.ijse.possystemapi.entity.Item;
 
 import java.sql.Connection;

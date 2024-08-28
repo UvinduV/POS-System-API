@@ -1,7 +1,7 @@
 package lk.ijse.possystemapi.bo;
 
-import lk.ijse.possystemapi.dao.CustomerDAO;
-import lk.ijse.possystemapi.dao.CustomerDAOImpl;
+import lk.ijse.possystemapi.dao.Custom.CustomerDAO;
+import lk.ijse.possystemapi.dao.Impl.CustomerDAOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.entity.Customer;
 

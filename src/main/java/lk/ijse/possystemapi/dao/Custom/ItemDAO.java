@@ -1,4 +1,4 @@
-package lk.ijse.possystemapi.dao;
+package lk.ijse.possystemapi.dao.Custom;
 
 import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.dto.ItemDTO;

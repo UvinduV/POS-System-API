@@ -1,11 +1,6 @@
-package lk.ijse.possystemapi.dao;
+package lk.ijse.possystemapi.dao.Impl;
 
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
-import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.possystemapi.dto.CustomerDTO;
-import lk.ijse.possystemapi.dto.ItemDTO;
-import lk.ijse.possystemapi.entity.Customer;
+import lk.ijse.possystemapi.dao.Custom.ItemDAO;
 import lk.ijse.possystemapi.entity.Item;
 
 import java.sql.Connection;
@@ -13,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemDAOImpl implements ItemDAO{
+public class ItemDAOImpl implements ItemDAO {
     static String SAVE_ITEM = "INSERT INTO item (ItemId,ItemName,qty,price) VALUES (?,?,?,?)";
     static String GET_ITEM="Select * from item ";
     static String UPDATE_ITEM="UPDATE item SET ItemName=?,qty=?,price=? WHERE ItemId=?";
