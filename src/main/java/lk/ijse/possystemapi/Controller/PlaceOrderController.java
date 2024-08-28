@@ -12,6 +12,8 @@ import lk.ijse.possystemapi.bo.BOFactory;
 import lk.ijse.possystemapi.bo.Custom.PlaceOrderBO;
 import lk.ijse.possystemapi.bo.Impl.PlaceOrderBOImpl;
 import lk.ijse.possystemapi.dto.PlaceOrderDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -22,15 +24,18 @@ import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/Order")
 public class PlaceOrderController extends HttpServlet {
+    static Logger logger= LoggerFactory.getLogger(PlaceOrderController.class);
     PlaceOrderBO placeOrderBO= (PlaceOrderBO) BOFactory.getBOFactory().getBo(BOFactory.BOTypes.ORDER);
     Connection connection;
     @Override
     public void init() throws ServletException {
+        logger.info("Initializing place order Controller with call inti method");
         try {
             var ctx=new InitialContext();
             DataSource pool = (DataSource)ctx.lookup("java:comp/env/jdbc/POSSystemApi");
             this.connection= pool.getConnection();
         }catch (SQLException | NamingException e){
+            logger.error("Init failed with", e.getMessage());
             e.printStackTrace();
         }
     }

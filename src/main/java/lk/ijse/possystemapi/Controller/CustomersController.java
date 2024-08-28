@@ -13,6 +13,8 @@ import lk.ijse.possystemapi.bo.Custom.CustomerBO;
 import lk.ijse.possystemapi.bo.Impl.CustomerBOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -24,11 +26,13 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/Customer")
 public class CustomersController extends HttpServlet {
+    static Logger logger= LoggerFactory.getLogger(CustomersController.class);
     CustomerBO customerBO = (CustomerBO) BOFactory.getBOFactory().getBo(BOFactory.BOTypes.CUSTOMER);;
     private Connection connection;
 
     @Override
     public void init() throws ServletException {
+        logger.info("Initializing customer Controller with call inti method");
         try {
             /*var driverCalss = getServletContext().getInitParameter("driver-class");
             var dbUrl = getServletContext().getInitParameter("dbURL");
@@ -40,6 +44,7 @@ public class CustomersController extends HttpServlet {
             DataSource pool = (DataSource)ctx.lookup("java:comp/env/jdbc/POSSystemApi");
             this.connection= pool.getConnection();
         }catch (SQLException | NamingException e){
+            logger.error("Init failed with", e.getMessage());
             e.printStackTrace();
         }
     }

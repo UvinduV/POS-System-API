@@ -14,6 +14,8 @@ import lk.ijse.possystemapi.bo.Custom.ItemBO;
 import lk.ijse.possystemapi.bo.Impl.ItemBOImpl;
 import lk.ijse.possystemapi.dto.ItemDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -25,16 +27,18 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/Item")
 public class ItemController extends HttpServlet {
-    /*ItemDAO itemDAO =new ItemDAOImpl();*/
+    static Logger logger= LoggerFactory.getLogger(ItemController.class);
     ItemBO itemBO = (ItemBO) BOFactory.getBOFactory().getBo(BOFactory.BOTypes.ITEM);
     private Connection connection;
     @Override
     public void init() throws ServletException {
+        logger.info("Initializing item Controller with call inti method");
         try {
             var ctx=new InitialContext();
             DataSource pool = (DataSource)ctx.lookup("java:comp/env/jdbc/POSSystemApi");
             this.connection= pool.getConnection();
         }catch (SQLException | NamingException e){
+            logger.error("Init failed with", e.getMessage());
             e.printStackTrace();
         }
     }
