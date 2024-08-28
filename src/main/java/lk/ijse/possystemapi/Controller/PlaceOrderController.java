@@ -8,7 +8,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.ijse.possystemapi.bo.PlaceOrderBO;
+import lk.ijse.possystemapi.bo.PlaceOrderBOImpl;
 import lk.ijse.possystemapi.dto.CustomerDTO;
+import lk.ijse.possystemapi.dto.PlaceOrderDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;
 
 import java.io.IOException;
@@ -18,6 +21,7 @@ import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/Order")
 public class PlaceOrderController extends HttpServlet {
+    PlaceOrderBO placeOrderBO= new PlaceOrderBOImpl();
     Connection connection;
     @Override
     public void init() throws ServletException {
@@ -38,8 +42,26 @@ public class PlaceOrderController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
         try (var writer = resp.getWriter()){
+            Jsonb jsonb= JsonbBuilder.create();
+            PlaceOrderDTO placeOrderDTO = jsonb.fromJson(req.getReader(), PlaceOrderDTO.class);
 
-        } catch (JsonException e) {
+            if (placeOrderDTO == null ) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Incorrect data");
+                return;
+            }
+
+            var reciveOrder = placeOrderBO.placeOrder(placeOrderDTO,connection);
+            System.out.println("place order controller"+ reciveOrder);
+
+            if (reciveOrder) {
+                writer.write("order place Successfully");
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+            }else {
+                writer.write("order place Failed");
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
+
+        } catch (JsonException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
