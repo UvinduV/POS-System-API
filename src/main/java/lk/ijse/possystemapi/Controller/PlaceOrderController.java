@@ -8,7 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.possystemapi.bo.PlaceOrderBO;
+import lk.ijse.possystemapi.bo.Custom.PlaceOrderBO;
 import lk.ijse.possystemapi.bo.Impl.PlaceOrderBOImpl;
 import lk.ijse.possystemapi.dto.PlaceOrderDTO;
 

@@ -1,6 +1,6 @@
 package lk.ijse.possystemapi.bo.Impl;
 
-import lk.ijse.possystemapi.bo.PlaceOrderBO;
+import lk.ijse.possystemapi.bo.Custom.PlaceOrderBO;
 import lk.ijse.possystemapi.dao.Custom.OrderDAO;
 import lk.ijse.possystemapi.dao.Custom.OrderDetailDAO;
 import lk.ijse.possystemapi.dao.Impl.OrderDAOImpl;

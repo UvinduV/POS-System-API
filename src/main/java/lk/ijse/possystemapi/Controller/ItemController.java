@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.possystemapi.bo.ItemBO;
+import lk.ijse.possystemapi.bo.Custom.ItemBO;
 import lk.ijse.possystemapi.bo.Impl.ItemBOImpl;
 import lk.ijse.possystemapi.dto.ItemDTO;
 import lk.ijse.possystemapi.utill.UtillProcess;

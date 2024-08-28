@@ -1,6 +1,6 @@
 package lk.ijse.possystemapi.bo.Impl;
 
-import lk.ijse.possystemapi.bo.ItemBO;
+import lk.ijse.possystemapi.bo.Custom.ItemBO;
 import lk.ijse.possystemapi.dao.Custom.ItemDAO;
 import lk.ijse.possystemapi.dao.Impl.ItemDAOImpl;
 import lk.ijse.possystemapi.dto.ItemDTO;
