@@ -81,8 +81,8 @@ public class CustomersController extends HttpServlet {
             CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
             customerDTO.setId(UtillProcess.generateCustomerId());
             System.out.println(customerDTO);
-            var customer=customerBO.saveCustomer(customerDTO,connection);
-            System.out.println("cust"+customer);
+            var customer = customerBO.saveCustomer(customerDTO,connection);
+            System.out.println("cust controller"+customer);
 
             if (customer) {
                 writer.write("Customer Save Successfully");
